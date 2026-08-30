@@ -39,8 +39,8 @@ if (!getSetting('active_provider')) setSetting('active_provider', 'lmstudio');
 if (!getSetting('lmstudio_url')) setSetting('lmstudio_url', 'http://127.0.0.1:1234/v1');
 if (!getSetting('openai_url')) setSetting('openai_url', 'https://api.openai.com/v1');
 if (!getSetting('openai_model')) setSetting('openai_model', 'gpt-4o-mini');
-if (!getSetting('anthropic_url')) setSetting('anthropic_url', 'https://api.anthropic.com/v1');
-if (!getSetting('anthropic_model')) setSetting('anthropic_model', 'claude-3-5-haiku-20241022');
+if (!getSetting('anthropic_url')) setSetting('anthropic_url', 'https://api.anthropic.com');
+if (!getSetting('anthropic_model')) setSetting('anthropic_model', 'claude-sonnet-4-5-20250929');
 if (!getSetting('google_url')) setSetting('google_url', 'https://generativelanguage.googleapis.com');
 if (!getSetting('google_model')) setSetting('google_model', 'gemini-2.5-flash');
 

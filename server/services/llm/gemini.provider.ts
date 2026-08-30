@@ -5,13 +5,8 @@ export class GeminiProvider implements LLMProvider {
   id = 'google' as const;
   name = 'Google Gemini';
   defaultBaseUrl = 'https://generativelanguage.googleapis.com';
-  defaultModel = 'gemini-2.5-flash';
-  popularModels = [
-    'gemini-2.5-flash',
-    'gemini-2.5-pro',
-    'gemini-1.5-flash',
-    'gemini-1.5-pro',
-  ];
+  defaultModel = 'gemini-3.6-flash';
+  popularModels = [];
   description = 'Googleの最新マルチモーダルLLM。高速・大容量コンテキスト・高精度な日本語処理。';
 
   private getClient(config: ProviderConfig): GoogleGenerativeAI {
@@ -20,6 +15,19 @@ export class GeminiProvider implements LLMProvider {
       throw new Error('Google Gemini APIキーが設定されていません。設定画面でAPIキーを入力してください。');
     }
     return new GoogleGenerativeAI(token);
+  }
+
+  private async listModelNames(config: ProviderConfig): Promise<string[]> {
+    const token = config.token || process.env.GEMINI_API_KEY || '';
+    if (!token) return [];
+    const base = (config.baseUrl || this.defaultBaseUrl).replace(/\/+$/, '');
+    const res = await fetch(`${base}/v1beta/models?key=${encodeURIComponent(token)}`);
+    if (!res.ok) return [];
+    const data = (await res.json()) as { models?: { name: string }[] };
+    return (data.models ?? [])
+      .map(m => m.name)
+      .filter(name => name.startsWith('models/gemini-'))
+      .map(name => name.replace('models/', ''));
   }
 
   async generateText(options: GenerateTextOptions): Promise<string> {
@@ -56,9 +64,10 @@ export class GeminiProvider implements LLMProvider {
 
       const res = await model.generateContent('Ping');
       if (res.response.text()) {
+        const availableModels = await this.listModelNames(config).catch(() => [] as string[]);
         return {
           success: true,
-          models: this.popularModels,
+          models: availableModels,
           message: 'Google Gemini APIへの接続に成功しました。',
         };
       }
