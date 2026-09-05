@@ -2,20 +2,12 @@ import { Router } from 'express';
 import { quizService, QuizQuestion } from '../services/quiz.service.js';
 import { getProviderConfig, getSetting } from '../config.js';
 import { ProviderId } from '../services/llm/provider.interface.js';
-<<<<<<< HEAD
-import { validateQuizAnswerInput } from '../middleware/security.js';
-
-export const quizRouter = Router();
-
-quizRouter.post('/generate', async (req, res) => {
-=======
 import { validateQuizAnswerInput, validateQuizGenerateInput } from '../middleware/security.js';
 import { safeError } from '../utils/safeLog.js';
 
 export const quizRouter = Router();
 
 quizRouter.post('/generate', validateQuizGenerateInput, async (req, res) => {
->>>>>>> 1d87e71 (updated)
   try {
     const { genre = 'all', count = 3, providerId, model } = req.body;
 
@@ -33,11 +25,7 @@ quizRouter.post('/generate', validateQuizGenerateInput, async (req, res) => {
       questions,
     });
   } catch (error: any) {
-<<<<<<< HEAD
-    console.error('クイズ生成エラー:', error);
-=======
     safeError('クイズ生成エラー:', error);
->>>>>>> 1d87e71 (updated)
     res.status(500).json({ error: error.message || 'クイズの生成中にエラーが発生しました。' });
   }
 });
@@ -64,11 +52,7 @@ quizRouter.post('/evaluate', validateQuizAnswerInput, async (req, res) => {
       evaluation,
     });
   } catch (error: any) {
-<<<<<<< HEAD
-    console.error('クイズ判定エラー:', error);
-=======
     safeError('クイズ判定エラー:', error);
->>>>>>> 1d87e71 (updated)
     res.status(500).json({ error: error.message || '回答判定中にエラーが発生しました。' });
   }
 });

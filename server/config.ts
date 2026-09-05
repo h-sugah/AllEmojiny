@@ -1,10 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
 import { join } from 'node:path';
-<<<<<<< HEAD
-import { mkdirSync } from 'node:fs';
-=======
 import { mkdirSync, chmodSync, readdirSync } from 'node:fs';
->>>>>>> 1d87e71 (updated)
 import { fileURLToPath } from 'node:url';
 import { ProviderId, ProviderConfig } from './services/llm/provider.interface.js';
 import { getProvider } from './services/llm/llm.factory.js';
@@ -13,8 +9,6 @@ const root = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const dataDir = join(root, 'data');
 mkdirSync(dataDir, { recursive: true });
 
-<<<<<<< HEAD
-=======
 /**
  * APIトークン等の機微情報を含むdataディレクトリを、同一マシンの他ユーザーから
  * 読み取れないよう保護する（Windows等chmodが効かない環境では黙って無視する）
@@ -36,7 +30,6 @@ function protectDataDir() {
 
 protectDataDir();
 
->>>>>>> 1d87e71 (updated)
 export const db = new DatabaseSync(join(dataDir, 'allemojiny.sqlite'));
 
 db.exec(`PRAGMA journal_mode=WAL;
@@ -53,8 +46,6 @@ CREATE TABLE IF NOT EXISTS conversion_history (
   created_at TEXT NOT NULL
 );`);
 
-<<<<<<< HEAD
-=======
 // WALモード有効化でsqlite-wal/-shmが新規作成されるため、権限保護を再適用
 protectDataDir();
 
@@ -95,7 +86,6 @@ export function recordConversionHistory(entry: ConversionHistoryEntry) {
   ).run(MAX_HISTORY_ROWS);
 }
 
->>>>>>> 1d87e71 (updated)
 export function getSetting(key: string, fallback = ''): string {
   const row = db.prepare('SELECT value FROM settings WHERE key=?').get(key) as { value: string } | undefined;
   return row?.value ?? fallback;

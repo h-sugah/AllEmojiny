@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
-<<<<<<< HEAD
-=======
 import { isIP } from 'node:net';
 import { lookup } from 'node:dns/promises';
 
@@ -23,6 +21,13 @@ export const ALLOWED_ORIGINS = [
  * Origin（無ければRefererで代替）が許可済みオリジンと一致するか検証する。
  * cors()のOrigin検証と独立した多層防御として、将来的にCORS設定が緩められても
  * localhost以外からの悪意あるフォーム自動送信等によるCSRFを防ぐ。
+ *
+ * Origin/Refererが両方とも無いリクエストはデフォルトで拒否する（フェイルクローズ）。
+ * 通常のブラウザ発リクエスト（fetch/XHR含む）はメソッドがPOST/PUT/PATCH/DELETEの場合、
+ * 同一オリジンであってもOriginヘッダーを送信するため、正規のSPA利用がここで拒否されることはない。
+ * ヘッダーが無いのはcurl等の非ブラウザ利用や、Origin/Refererを意図的に伏せたリクエストであり、
+ * これを許可すると同一マシン上の他プロセス・他ユーザーが無認証で状態変更API
+ * （設定変更・保存済みAPIキーを用いた接続テスト等）を呼び出せてしまうため許可しない。
  */
 export function csrfProtection(req: Request, res: Response, next: NextFunction) {
   const mutatingMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
@@ -48,18 +53,11 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction) 
   }
 
   // Origin/Refererの両方が無い場合: ブラウザは通常いずれか（特にOrigin）を必ず送信するため、
-  // ここに到達するのは主にcurl等の非ブラウザ利用と想定して許可する。
-  // ただしSec-Fetch-Site（ブラウザが自動付与しJSからは偽装できないヘッダー）が
-  // 'same-origin'/'none'以外の値で付いている場合は、Referrer-Policy等でOrigin/Refererを
-  // 意図的に隠したブラウザ発クロスサイトリクエストの可能性が高いため拒否する。
-  const secFetchSite = req.headers['sec-fetch-site'];
-  if (typeof secFetchSite === 'string' && secFetchSite !== 'same-origin' && secFetchSite !== 'none') {
-    return res.status(403).json({ error: 'CSRF対策により、このリクエストは拒否されました。' });
-  }
-
-  next();
+  // ここに到達するのは主にcurl等の非ブラウザ利用、または意図的にヘッダーを伏せたリクエストである。
+  // 許可すると同一マシン上の他プロセス・他ユーザーが無認証で状態変更APIを呼べてしまうため、
+  // フェイルオープンにはせず一律で拒否する。
+  return res.status(403).json({ error: 'CSRF対策により、このリクエストは拒否されました。' });
 }
->>>>>>> 1d87e71 (updated)
 
 /**
  * 2000文字入力バリデーション（テキスト→絵文字）
@@ -111,12 +109,6 @@ export function validateDecodeInput(req: Request, res: Response, next: NextFunct
 }
 
 /**
-<<<<<<< HEAD
- * クイズ回答バリデーション（上限400文字）
- */
-export function validateQuizAnswerInput(req: Request, res: Response, next: NextFunction) {
-  const { answer } = req.body;
-=======
  * クイズ問題データ(question)の各文字列フィールドの上限文字数
  * クイズ生成時にAIへ指示している上限（originalTextは400文字等）に合わせて設定
  */
@@ -137,7 +129,6 @@ const QUIZ_QUESTION_FIELD_LIMITS: Record<string, number> = {
  */
 export function validateQuizAnswerInput(req: Request, res: Response, next: NextFunction) {
   const { answer, question } = req.body;
->>>>>>> 1d87e71 (updated)
   if (typeof answer !== 'string') {
     return res.status(400).json({ error: '回答を入力してください。' });
   }
@@ -153,8 +144,6 @@ export function validateQuizAnswerInput(req: Request, res: Response, next: NextF
     });
   }
 
-<<<<<<< HEAD
-=======
   if (question !== undefined) {
     if (typeof question !== 'object' || question === null || Array.isArray(question)) {
       return res.status(400).json({ error: '問題データの形式が不正です。' });
@@ -169,15 +158,11 @@ export function validateQuizAnswerInput(req: Request, res: Response, next: NextF
     }
   }
 
->>>>>>> 1d87e71 (updated)
   req.body.answer = trimmed;
   next();
 }
 
 /**
-<<<<<<< HEAD
- * APIレート制限
-=======
  * カスタム辞書登録バリデーション（単語100文字・絵文字50文字を上限）
  */
 export function validateDictionaryInput(req: Request, res: Response, next: NextFunction) {
@@ -362,7 +347,6 @@ export async function isValidProviderUrl(value: string): Promise<boolean> {
 
 /**
  * APIレート制限（全エンドポイント共通）
->>>>>>> 1d87e71 (updated)
  */
 export const apiRateLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1分間
@@ -371,8 +355,6 @@ export const apiRateLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'リクエスト頻度が高すぎます。少し時間をおいてから再試行してください。' },
 });
-<<<<<<< HEAD
-=======
 
 /**
  * 外部LLM APIを呼び出すエンドポイント専用の追加レート制限
@@ -386,4 +368,3 @@ export const llmRateLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'AI呼び出しの頻度が高すぎます。少し時間をおいてから再試行してください。' },
 });
->>>>>>> 1d87e71 (updated)

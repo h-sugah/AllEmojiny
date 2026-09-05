@@ -11,30 +11,13 @@ import { decodeRouter } from './routes/decode.js';
 import { quizRouter } from './routes/quiz.js';
 import { dictionaryRouter } from './routes/dictionary.js';
 import { settingsRouter } from './routes/settings.js';
-<<<<<<< HEAD
-import { apiRateLimiter } from './middleware/security.js';
-=======
 import { apiRateLimiter, llmRateLimiter, csrfProtection, ALLOWED_ORIGINS } from './middleware/security.js';
 import { safeError } from './utils/safeLog.js';
->>>>>>> 1d87e71 (updated)
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-<<<<<<< HEAD
-
-// セキュリティ & ミドルウェア
-app.use(helmet({
-  contentSecurityPolicy: false, // Vite/Reactの開発・画像読み込み互換
-}));
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// APIレート制限
-app.use('/api', apiRateLimiter);
-=======
 // localhost専用アプリのため、明示的に0.0.0.0等を指定しない限りループバックにのみバインドする
 const HOST = process.env.HOST || '127.0.0.1';
 
@@ -70,7 +53,6 @@ app.use('/api/convert', llmRateLimiter);
 app.use('/api/decode', llmRateLimiter);
 app.use('/api/quiz', llmRateLimiter);
 app.use('/api/settings/providers', llmRateLimiter);
->>>>>>> 1d87e71 (updated)
 
 // ヘルスチェック
 app.get('/api/health', (_req, res) => {
@@ -101,16 +83,6 @@ if (existsSync(distPath)) {
 
 // グローバルエラーハンドラー
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-<<<<<<< HEAD
-  console.error('Unhandled server error:', err);
-  res.status(err.status || 500).json({
-    error: err.message || '内部サーバーエラーが発生しました。',
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 AllEmojiny Server is running on http://localhost:${PORT}`);
-=======
   safeError('Unhandled server error:', err);
   const status = err.status || 500;
   // 4xx（アプリコードが意図的に設定したステータス）はユーザー向けメッセージとして
@@ -123,5 +95,4 @@ app.listen(PORT, () => {
 
 app.listen(Number(PORT), HOST, () => {
   console.log(`🚀 AllEmojiny Server is running on http://${HOST}:${PORT}`);
->>>>>>> 1d87e71 (updated)
 });

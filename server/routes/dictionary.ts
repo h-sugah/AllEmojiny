@@ -1,9 +1,6 @@
 import { Router } from 'express';
 import { dictionaryService } from '../services/dictionary.service.js';
-<<<<<<< HEAD
-=======
 import { validateDictionaryInput } from '../middleware/security.js';
->>>>>>> 1d87e71 (updated)
 
 export const dictionaryRouter = Router();
 
@@ -21,11 +18,7 @@ dictionaryRouter.get('/', (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-dictionaryRouter.post('/', (req, res) => {
-=======
 dictionaryRouter.post('/', validateDictionaryInput, (req, res) => {
->>>>>>> 1d87e71 (updated)
   try {
     const { keyword, emoji } = req.body;
     dictionaryService.addCustomWord(keyword, emoji);
