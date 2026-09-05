@@ -1,4 +1,31 @@
+<<<<<<< HEAD
 data/
 dist/
 doc/
 node_modules/
+=======
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+tsconfig.tsbuildinfo
+
+# Environment variables (APIキー等の機微情報)
+.env
+.env.local
+.env.*.local
+.claude
+
+# アプリデータ（APIトークンを含むSQLite DB・カスタム辞書）
+data/
+
+# ログ
+npm-debug.log*
+*.log
+
+# OS/エディタ生成物
+.DS_Store
+.vscode/
+.idea/
+>>>>>>> 1d87e71 (updated)

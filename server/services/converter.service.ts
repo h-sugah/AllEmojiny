@@ -1,6 +1,11 @@
 import { getProvider } from './llm/llm.factory.js';
 import { ProviderConfig } from './llm/provider.interface.js';
 import { dictionaryService } from './dictionary.service.js';
+<<<<<<< HEAD
+=======
+import { PROMPT_INJECTION_GUARD } from './promptGuard.js';
+import { safeWarn } from '../utils/safeLog.js';
+>>>>>>> 1d87e71 (updated)
 
 export type ConversionMode = 'exact' | 'forced' | 'chaos';
 
@@ -75,6 +80,10 @@ ${text}
         const stage1Res = await provider.generateText({
           config,
           prompt: stage1Prompt,
+<<<<<<< HEAD
+=======
+          systemPrompt: `あなたは日本語テキストの意味構造を分析する専門AIです。必ず指定されたJSONフォーマットのみを出力してください。${PROMPT_INJECTION_GUARD}`,
+>>>>>>> 1d87e71 (updated)
           temperature: 0.3,
           maxTokens: 1000,
           signal,
@@ -85,7 +94,11 @@ ${text}
           stage1Data = JSON.parse(jsonMatch[0]);
         }
       } catch (err) {
+<<<<<<< HEAD
         console.warn('Stage 1 構文解析スキップ/失敗:', err);
+=======
+        safeWarn('Stage 1 構文解析スキップ/失敗:', err);
+>>>>>>> 1d87e71 (updated)
       }
     }
 
@@ -144,7 +157,11 @@ ${text}`;
     rawResponse = await provider.generateText({
       config,
       prompt: stage3Prompt,
+<<<<<<< HEAD
       systemPrompt: 'あなたはテキストを強制的に絵文字だけで表現する専門AIです。必ず指定されたJSONフォーマットのみを出力してください。',
+=======
+      systemPrompt: `あなたはテキストを強制的に絵文字だけで表現する専門AIです。必ず指定されたJSONフォーマットのみを出力してください。${PROMPT_INJECTION_GUARD}`,
+>>>>>>> 1d87e71 (updated)
       temperature: mode === 'chaos' ? 0.9 : mode === 'forced' ? 0.7 : 0.4,
       maxTokens: 2048,
       signal,
@@ -158,7 +175,11 @@ ${text}`;
         breakdown = Array.isArray(parsed.breakdown) ? parsed.breakdown : [];
       }
     } catch (e) {
+<<<<<<< HEAD
       console.warn('JSONパース失敗。フォールバック抽出を試行します:', e);
+=======
+      safeWarn('JSONパース失敗。フォールバック抽出を試行します:', e);
+>>>>>>> 1d87e71 (updated)
     }
 
     // JSONパースが失敗した場合のフォールバック

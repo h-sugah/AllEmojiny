@@ -14,7 +14,10 @@ export class LMStudioProvider implements LLMProvider {
     return new OpenAI({
       baseURL,
       apiKey: config.token || 'lm-studio',
+<<<<<<< HEAD
       dangerouslyAllowBrowser: true,
+=======
+>>>>>>> 1d87e71 (updated)
     });
   }
 

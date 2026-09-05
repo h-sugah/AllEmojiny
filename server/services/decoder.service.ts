@@ -1,5 +1,10 @@
 import { getProvider } from './llm/llm.factory.js';
 import { ProviderConfig } from './llm/provider.interface.js';
+<<<<<<< HEAD
+=======
+import { PROMPT_INJECTION_GUARD } from './promptGuard.js';
+import { safeWarn } from '../utils/safeLog.js';
+>>>>>>> 1d87e71 (updated)
 
 export interface DecodeResult {
   text: string;
@@ -48,7 +53,11 @@ ${emojiString}
     const rawResponse = await provider.generateText({
       config,
       prompt,
+<<<<<<< HEAD
       systemPrompt: 'あなたは絵文字から文章を復元する専門家です。必ず指定されたJSONフォーマットのみを出力してください。',
+=======
+      systemPrompt: `あなたは絵文字から文章を復元する専門家です。必ず指定されたJSONフォーマットのみを出力してください。${PROMPT_INJECTION_GUARD}`,
+>>>>>>> 1d87e71 (updated)
       temperature: 0.6,
       maxTokens: 2048,
       signal,
@@ -67,7 +76,11 @@ ${emojiString}
         interpretations = Array.isArray(parsed.interpretations) ? parsed.interpretations : [];
       }
     } catch (e) {
+<<<<<<< HEAD
       console.warn('デコードJSONパース失敗:', e);
+=======
+      safeWarn('デコードJSONパース失敗:', e);
+>>>>>>> 1d87e71 (updated)
     }
 
     if (!decodedText) {
