@@ -9,3 +9,16 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    groups:
+      # vite and its plugin have interlocking peer-dependency ranges;
+      # bumping one without the other breaks npm install (ERESOLVE).
+      vite:
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+      # tailwindcss v3->v4 moved the PostCSS plugin into a separate
+      # package and changed the CSS entry syntax; keep them in lockstep.
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
