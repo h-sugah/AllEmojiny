@@ -76,7 +76,7 @@ const rootDir = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const distPath = join(rootDir, 'dist');
 if (existsSync(distPath)) {
   app.use(express.static(distPath));
-  app.get('/*splat', (_req, res) => {
+  app.get('/*splat', apiRateLimiter, (_req, res) => {
     res.sendFile(join(distPath, 'index.html'));
   });
 }
