@@ -33,7 +33,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.0.0",
-    "lucide-react": "^1.16.0",
+    "lucide-react": "^1.43.0",
     "openai": "^4.86.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
