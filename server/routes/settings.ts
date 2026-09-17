@@ -117,7 +117,7 @@ settingsRouter.post('/providers/:id/test', async (req, res) => {
       message: result.message,
     });
   } catch (error: any) {
-    safeError(`接続テストエラー (${pid}):`, error);
+    safeError('接続テストエラー:', pid, error);
     res.status(502).json({ error: error.message || '接続に失敗しました。' });
   }
 });
