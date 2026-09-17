@@ -32,10 +32,10 @@ function toSafeString(value: unknown): string {
  * 既知のシークレットパターンをマスクしてから出力する。LLM SDKやfetchの例外メッセージには
  * 稀にリクエスト内容（Authorizationヘッダー等）が含まれることがあるための多層防御。
  */
-export function safeError(label: string, value: unknown) {
-  console.error(label, toSafeString(value));
+export function safeError(label: string, ...values: unknown[]) {
+  console.error(label, ...values.map(toSafeString));
 }
 
-export function safeWarn(label: string, value: unknown) {
-  console.warn(label, toSafeString(value));
+export function safeWarn(label: string, ...values: unknown[]) {
+  console.warn(label, ...values.map(toSafeString));
 }
